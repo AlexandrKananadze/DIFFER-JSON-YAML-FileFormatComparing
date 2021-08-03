@@ -3,6 +3,7 @@
  */
 package java.project.lvl2;
 
+import hexlet.code.App;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

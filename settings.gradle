@@ -7,5 +7,4 @@
  * in the user manual at https://docs.gradle.org/7.0.1/userguide/multi_project_builds.html
  */
 
-rootProject.name = 'java-project-lvl2'
-include('app')
+rootProject.name = 'app'
