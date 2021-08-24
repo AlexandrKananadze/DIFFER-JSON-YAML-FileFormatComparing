@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class Differ {
-    private static final Map<String, String> KEYS_MAP = new HashMap<>();
+    private static final Map<String, String> KEYS_MAP = new LinkedHashMap<>();
 
     public static String fileParsePath(String path) throws IOException {
         Path resPath = Paths.get(path).toAbsolutePath().normalize();

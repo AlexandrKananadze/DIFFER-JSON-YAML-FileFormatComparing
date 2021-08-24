@@ -32,7 +32,15 @@ public class Formatter {
                 .sorted((x1, x2) -> {
                     String withoutPrefix1 = x1.getKey().substring(4);
                     String withoutPrefix2 = x2.getKey().substring(4);
+
                     return CharSequence.compare(withoutPrefix1, withoutPrefix2);
+                }).sorted((x3,x4) -> {
+                    String withoutPrefix3 = x3.getKey().substring(4);
+                    String withoutPrefix4 = x4.getKey().substring(4);
+                    if (withoutPrefix3.equals(withoutPrefix4)) {
+                        return -1;
+                    }
+                   return  0;
                 })
                 .collect(Collectors.toMap(Map.Entry::getKey,
                         Map.Entry::getValue, (x, y) -> x, LinkedHashMap::new));
