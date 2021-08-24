@@ -1,39 +1,38 @@
 package hexlet.code.formatters;
 
+import hexlet.code.Diff;
 import hexlet.code.Formatter;
-
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Stylish {
 
-    public static String collectFinalDiffStylysh(Map<String, Object> firstMap,
-                                                 Map<String, Object> secondMap, Map<String, String> keyMap) {
-
-        Map<String, Object> diffFinal = new HashMap<>();
-
-        for (Map.Entry<String, String> entry : keyMap.entrySet()) {
-            switch (entry.getValue()) {
+    public static String collectFinalDiffStylish(TreeMap<String, Diff> diff) {
+        LinkedHashMap<String, Object> stylish = new LinkedHashMap<>();
+        for (Map.Entry<String, Diff> entry : diff.entrySet()) {
+            switch (entry.getValue().getStatus()) {
                 case "added":
-                    diffFinal.put("  + " + entry.getKey() + ": ", secondMap.get(entry.getKey()) + "\n");
+                    stylish.put("  + " + entry.getKey() + ": ", entry.getValue().getValue2() + "\n");
                     break;
                 case "changed":
-                    diffFinal.put("  - " + entry.getKey() + ": ", firstMap.get(entry.getKey()) + "\n");
-                    diffFinal.put("  + " + entry.getKey() + ": ", secondMap.get(entry.getKey()) + "\n");
+                    stylish.put("  - " + entry.getKey() + ": ", entry.getValue().getValue1() + "\n");
+                    stylish.put("  + " + entry.getKey() + ": ", entry.getValue().getValue2() + "\n");
                     break;
                 case "equals":
-                    diffFinal.put("    " + entry.getKey() + ": ", secondMap.get(entry.getKey()) + "\n");
+                    stylish.put("    " + entry.getKey() + ": ", entry.getValue().getValue1() + "\n");
                     break;
                 case "removed":
-                    diffFinal.put("  - " + entry.getKey() + ": ", firstMap.get(entry.getKey()) + "\n");
+                    stylish.put("  - " + entry.getKey() + ": ", entry.getValue().getValue1() + "\n");
                     break;
                 default:
                     break;
             }
         }
-        return Formatter.mapToString(Formatter.comparator(diffFinal));
+        return Formatter.mapToString(stylish);
     }
-
-
 }
+
+
+
 

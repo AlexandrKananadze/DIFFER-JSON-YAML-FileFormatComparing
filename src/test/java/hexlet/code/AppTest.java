@@ -16,6 +16,8 @@ public class AppTest {
     private final String expRecursive = Files.readString(pathRecursive);
     private final Path pathPlain = Paths.get("src/test/resources/TestResult/TestPlain").normalize();
     private final String expPlain = Files.readString(pathPlain);
+    private final Path pathJson = Paths.get("src/test/resources/TestResult/TestJson").normalize();
+    private final String expJson = Files.readString(pathJson);
 
    public AppTest() throws IOException {
    }
@@ -51,11 +53,11 @@ public class AppTest {
         String secondJson = "src/test/resources/Recursive2.json";
         Assertions.assertEquals(expPlain, Differ.generate(firstJson, secondJson, "plain"));
     }
- //  @Test
- //  void difRecursiveJsonPlain() throws Exception {
- //      String firstJson = "src/test/resources/Recursive1.json";
- //      String secondJson = "src/test/resources/Recursive2.json";
- //      assertEquals(expPlain, Differ.generate(firstJson, secondJson, "json"));
- //  }
+   @Test
+   void difRecursiveJsonJson() throws Exception {
+       String firstJson = "src/test/resources/file1.json";
+       String secondJson = "src/test/resources/file2.json";
+       Assertions.assertEquals(expJson, Differ.generate(firstJson, secondJson, "json"));
+   }
 
 }

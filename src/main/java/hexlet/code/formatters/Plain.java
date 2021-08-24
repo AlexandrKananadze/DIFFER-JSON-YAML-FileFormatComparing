@@ -1,11 +1,9 @@
 package hexlet.code.formatters;
 
+import hexlet.code.Diff;
 import hexlet.code.Formatter;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Plain {
 
@@ -13,38 +11,39 @@ public class Plain {
         if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
             return "[complex value]";
         }
-        return obj + "";
+        if (obj instanceof String) {
+            return "\'" + obj + "\'";
+        }
+        return obj+"";
     }
 
-    public static String plainGen(Map<String, Object> firstMap, Map<String, Object> secondMap,
-                                  Map<String, String> keyMap) {
+    public static String plainGen(TreeMap<String, Diff> diff) {
 
-        Map<String, Object> diffFinal = new HashMap<>();
+        LinkedHashMap<String, Object> plain = new LinkedHashMap<>();
 
-        for (Map.Entry<String, String> entry : keyMap.entrySet()) {
-            switch (entry.getValue()) {
+        for (Map.Entry<String, Diff> entry : diff.entrySet()) {
+            switch (entry.getValue().getStatus()) {
                 case "added":
-                    diffFinal.put("Property '"
+                    plain.put("Property '"
                             + entry.getKey(), "' was added with value: "
-                            + checkForObjectValues(secondMap.get(entry.getKey())) + "\n");
+                            + checkForObjectValues(entry.getValue().getValue2()) + "\n");
                     break;
                 case "changed":
-                    diffFinal.put("Property '"
+                    plain.put("Property '"
                             + entry.getKey(), "' was updated. From "
-                            + checkForObjectValues(firstMap.get(entry.getKey())) + " to "
-                            + checkForObjectValues(secondMap.get(entry.getKey())) + "\n");
+                            + checkForObjectValues(entry.getValue().getValue1()) + " to "
+                            + checkForObjectValues(entry.getValue().getValue2()) + "\n");
                     break;
 
                 case "removed":
-                    diffFinal.put("Property '" + entry.getKey(), "' was removed\n");
+                    plain.put("Property '" + entry.getKey(), "' was removed" + "\n");
                     break;
                 default:
                     break;
             }
         }
-        return Formatter.mapToString(Formatter.comparator(diffFinal));
+        return Formatter.mapToString(plain);
     }
-
 
 
 }

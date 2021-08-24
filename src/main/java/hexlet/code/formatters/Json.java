@@ -1,37 +1,39 @@
 package hexlet.code.formatters;
 
+import hexlet.code.Diff;
 import hexlet.code.Formatter;
-import java.util.HashMap;
+
+import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Json {
-    public static String jsonGen(Map<String, Object> firstMap, Map<String, Object> secondMap,
-                                 Map<String, String> keyMap) {
+    public static String jsonGen(TreeMap<String, Diff> diff) {
 
-        Map<String, Object> diffFinal = new HashMap<>();
-        for (Map.Entry<String, String> entry : keyMap.entrySet()) {
-            switch (entry.getValue()) {
+        LinkedHashMap<String, Object> json = new LinkedHashMap<>();
+        for (Map.Entry<String, Diff> entry : diff.entrySet()) {
+            switch (entry.getValue().getStatus()) {
                 case "added":
-                    diffFinal.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
+                    json.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
                             + "   \"was\": \"\"," + "\n"
-                            + "   \"now\": " + "\"" + secondMap.get(entry.getKey()) + "\"" + "\n"
+                            + "   \"now\": " + "\"" + entry.getValue().getValue2() + "\"" + "\n"
                             + "},\n");
                     break;
                 case "changed":
-                    diffFinal.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
-                            + "   \"was\": " + "\"" + firstMap.get(entry.getKey()) + "\"," + "\n"
-                            + "   \"now\": " + "\"" + secondMap.get(entry.getKey()) + "\"" + "\n"
+                    json.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
+                            + "   \"was\": " + "\"" + entry.getValue().getValue1() + "\"," + "\n"
+                            + "   \"now\": " + "\"" + entry.getValue().getValue2() + "\"" + "\n"
                             + "},\n");
                     break;
                 case "equals":
-                    diffFinal.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
-                            + "   \"was\": " + "\"" + secondMap.get(entry.getKey()) + "\"," + "\n"
-                            + "   \"now\": " + "\"" + secondMap.get(entry.getKey()) + "\"" + "\n"
+                    json.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
+                            + "   \"was\": " + "\"" + entry.getValue().getValue1() + "\"," + "\n"
+                            + "   \"now\": " + "\"" + entry.getValue().getValue1() + "\"" + "\n"
                             + "},\n");
                     break;
                 case "removed":
-                    diffFinal.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
-                            + "   \"was\": " + "\"" + firstMap.get(entry.getKey()) + "\"," + "\n"
+                    json.put("{\n" + " \"field\":" + " \"" + entry.getKey() + "\",", "\n"
+                            + "   \"was\": " + "\"" + entry.getValue().getValue1() + "\"," + "\n"
                             + "   \"now\": \"\" " + "\n"
                             + "},\n");
                     break;
@@ -39,7 +41,7 @@ public class Json {
                     break;
             }
         }
-        return Formatter.mapToString(Formatter.comparator(diffFinal));
+        return Formatter.mapToString(json);
     }
 }
 

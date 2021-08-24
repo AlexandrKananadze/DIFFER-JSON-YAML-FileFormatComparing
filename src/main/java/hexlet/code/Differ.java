@@ -4,24 +4,49 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Differ {
-    private static final Map<String, String> KEYS_MAP = new LinkedHashMap<>();
 
     public static String fileParsePath(String path) throws IOException {
         Path resPath = Paths.get(path).toAbsolutePath().normalize();
         return Files.readString(resPath);
     }
-//comparator for maps values objects
-    public static boolean comparator(Object map1, Object map2) {
-        if (map1 == null || map2 == null) {
-            return false;
-        }
-        return map1.equals(map2);
+
+    public static HashSet<String>  keySet (Map<String,Object> first, Map<String,Object> second) {
+        HashSet<String> keySet = new HashSet<>(first.keySet());
+        keySet.addAll(second.keySet());
+       return keySet;
     }
 
+    public static boolean checkNull (Object first,Object second) {
+        if (first == null || second ==null) {
+            return first == second;
+        }
+        return first.equals(second);
+    }
+    public static TreeMap<String, Diff> differ (HashSet<String> keySet,Map<String,Object> firstMap, Map<String,Object> secondMap ) {
+        TreeMap<String, Diff> diff = new TreeMap<>();
+        for ( String key: keySet  ) {
+            if (firstMap.containsKey(key) && !secondMap.containsKey(key)) {
+                Diff differ = new Diff("removed",firstMap.get(key), secondMap.get(key));
+                diff.put(key,differ);
+            }
+            if (!firstMap.containsKey(key) && secondMap.containsKey(key)) {
+                Diff differ = new Diff( "added",firstMap.get(key),secondMap.get(key));
+                diff.put(key,differ);
+            }
+            if (firstMap.containsKey(key) && secondMap.containsKey(key) && checkNull(firstMap.get(key),(secondMap.get(key)))){
+                Diff differ = new Diff( "equals",firstMap.get(key),secondMap.get(key));
+                diff.put(key,differ);
+            }
+            if(firstMap.containsKey(key) && secondMap.containsKey(key) && !checkNull(firstMap.get(key),(secondMap.get(key)))) {
+                Diff differ = new Diff( "changed",firstMap.get(key), secondMap.get(key));
+                diff.put(key,differ);
+            }
+        }
+        return diff;
+    }
 // default format stylish
     public static String generate(String filepath1, String filepath2) throws Exception {
         return generate(filepath1, filepath2, "stylish");
@@ -32,42 +57,11 @@ public class Differ {
         String secondFileToString = fileParsePath(filepath2);
         Map<String, Object> firstMap = Parser.parseToMap(firstFileToString, filepath1);
         Map<String, Object> secondMap = Parser.parseToMap(secondFileToString, filepath2);
-        // keymap fullfilment
-        for (Map.Entry<String, Object> first : firstMap.entrySet()) {
-            if (!secondMap.containsKey(first.getKey())) {
-                //removed firstmap key
-                KEYS_MAP.put(first.getKey(), "removed");
-            }
-        }
-        for (Map.Entry<String, Object> first : firstMap.entrySet()) {
-            for (Map.Entry<String, Object> second : secondMap.entrySet()) {
-                if (first.getKey().equals(second.getKey()) && comparator(first.getValue(), second.getValue())) {
-                    // key equals and value equals // no diff
-                    KEYS_MAP.put(first.getKey(), "equals");
-                }
-                if (first.getKey().equals(second.getKey()) && !comparator(first.getValue(), second.getValue())) {
-                    // keys equals, values no equals // changed
-                    KEYS_MAP.put(first.getKey(), "changed");
-                }
-            }
-        }
-        for (Map.Entry<String, Object> second : secondMap.entrySet()) {
-            if (!firstMap.containsKey(second.getKey())) {
-                // added
-                KEYS_MAP.put(second.getKey(), "added");
-            }
-        }
-        return Formatter.formatter(format, firstMap, secondMap, KEYS_MAP);
+        HashSet<String> keyset = keySet(firstMap,secondMap);
+        TreeMap <String, Diff> diff = differ(keyset,firstMap,secondMap);
+
+        return Formatter.formatter(format, diff);
     }
-
- // public static void main(String[] args) throws IOException {
- //    String firstJson = "src/test/resources/file1.yaml";
- //    String secondJson = "src/test/resources/file2.yaml";
- //    String format = "json";
- //    System.out.println(Differ.generate(firstJson, secondJson, format));
-
- // }
-
 }
 
 
