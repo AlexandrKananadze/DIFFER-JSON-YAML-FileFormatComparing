@@ -11,7 +11,7 @@ install: clean
 	./gradlew install
 
 run-dist:
-	build/install/app/bin/app
+	./build/install/app/bin/app
 
 run:
 	./gradlew run
@@ -24,5 +24,9 @@ lint:
 
 check-updates:
 	./gradlew dependencyUpdates
+
+reports:
+	./gradlew test
+	./gradlew jacocoTestReport
 
 build-run: build run

@@ -1,67 +1,73 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Differ {
+    private static final Map<String, String> KEYS_MAP = new HashMap<>();
 
-    public static Map<String, Object> reader(String filepath) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(new File(filepath), new TypeReference<>() {
-});
+    public static String fileParsePath(String path) throws IOException {
+        Path resPath = Paths.get(path).toAbsolutePath().normalize();
+        return Files.readString(resPath);
+    }
+//comparator for maps values objects
+    public static boolean comparator(Object map1, Object map2) {
+        if (map1 == null || map2 == null) {
+            return false;
+        }
+        return map1.equals(map2);
     }
 
-    public static Map<String, Object> generate(String filepath1, String filepath2) throws IOException {
-        //  String filepath1 = "src/main/resources/file1.json";
-        //  String filepath2 = "src/main/resources/file2.json";
-        Map<String, Object> firstFile = new HashMap<>(reader(filepath1));
-        Map<String, Object> secondFile = new HashMap<>(reader(filepath2));
-        System.out.println(firstFile);
-        System.out.println(secondFile);
-
-        Map<String, Object> result = new HashMap<>();
-
-
-        for (Map.Entry<String, Object> first : firstFile.entrySet()) {
-            if (!secondFile.containsKey(first.getKey())) {
-                result.put("-" + first.getKey(), ": " + first.getValue());
-            }
-        }
-        for (Map.Entry<String, Object> first : firstFile.entrySet()) {
-            for (Map.Entry<String, Object> second : secondFile.entrySet()) {
-                if (first.getKey().equals(second.getKey()) && first.getValue().equals(second.getValue())) {
-                    result.put(" " + first.getKey(), ":" + first.getValue());
-                }
-                if (first.getKey().equals(second.getKey()) && !first.getValue().equals(second.getValue())) {
-                    result.put("-" + first.getKey(), ": " + first.getValue());
-                    result.put("+" + second.getKey(), ": " + second.getValue());
-                }
-
-            }
-        }
-        for (Map.Entry<String, Object> second : secondFile.entrySet()) {
-            if (!firstFile.containsKey(second.getKey())) {
-                result.put("+" + second.getKey(), ": " + second.getValue());
-            }
-        }
-        //   // final map unsorted
-        //   System.out.println();
-        //   for (Map.Entry<String, Object> res : result.entrySet()) {
-        //       System.out.println(res);
-        //   }
-
-        System.out.println();
-        // sorting sout alphabet
-        // result.entrySet().stream().sorted(Map.Entry.comparingByKey()).forEach(System.out::println);
-        return result;
+// default format stylish
+    public static String generate(String filepath1, String filepath2) throws Exception {
+        return generate(filepath1, filepath2, "stylish");
     }
+//choosable format plain, stylish, json
+    public static String generate(String filepath1, String filepath2, String format) throws IOException {
+        String firstFileToString = fileParsePath(filepath1);
+        String secondFileToString = fileParsePath(filepath2);
+        Map<String, Object> firstMap = Parser.parseToMap(firstFileToString, filepath1);
+        Map<String, Object> secondMap = Parser.parseToMap(secondFileToString, filepath2);
+        // keymap fullfilment
+        for (Map.Entry<String, Object> first : firstMap.entrySet()) {
+            if (!secondMap.containsKey(first.getKey())) {
+                //removed firstmap key
+                KEYS_MAP.put(first.getKey(), "removed");
+            }
+        }
+        for (Map.Entry<String, Object> first : firstMap.entrySet()) {
+            for (Map.Entry<String, Object> second : secondMap.entrySet()) {
+                if (first.getKey().equals(second.getKey()) && comparator(first.getValue(), second.getValue())) {
+                    // key equals and value equals // no diff
+                    KEYS_MAP.put(first.getKey(), "equals");
+                }
+                if (first.getKey().equals(second.getKey()) && !comparator(first.getValue(), second.getValue())) {
+                    // keys equals, values no equals // changed
+                    KEYS_MAP.put(first.getKey(), "changed");
+                }
+            }
+        }
+        for (Map.Entry<String, Object> second : secondMap.entrySet()) {
+            if (!firstMap.containsKey(second.getKey())) {
+                // added
+                KEYS_MAP.put(second.getKey(), "added");
+            }
+        }
+        return Formatter.formatter(format, firstMap, secondMap, KEYS_MAP);
+    }
+
+ // public static void main(String[] args) throws IOException {
+ //    String firstJson = "src/test/resources/file1.yaml";
+ //    String secondJson = "src/test/resources/file2.yaml";
+ //    String format = "json";
+ //    System.out.println(Differ.generate(firstJson, secondJson, format));
+
+ // }
+
 }
-
-
 
 
