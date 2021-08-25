@@ -1,6 +1,6 @@
 package hexlet.code;
 
-public class Diff {
+public final class Diff {
     private final String status;
     private final Object value1;
     private final Object value2;
