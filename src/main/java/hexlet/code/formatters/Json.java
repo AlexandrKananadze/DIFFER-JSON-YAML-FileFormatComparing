@@ -25,7 +25,7 @@ public class Json {
         String status = "\"status\":\"";
         String oldValue = "\"oldValue\":";
         String newValue = "\"newValue\":";
-        String end = "},\n";
+        String end = "},";
 
 
         LinkedHashMap<String, Object> json = new LinkedHashMap<>();
@@ -59,8 +59,7 @@ public class Json {
                     break;
             }
         }
-        String resultString = "\n  \"diffs\": [\n" + Formatter.mapToString(json) + "  ]";
-        return resultString;
+        return "\n  \"diffs\": [\n" + Formatter.mapToString(json) + "\n  ]";
     }
 
 }

@@ -17,7 +17,7 @@ public class Plain {
             return "[complex value]";
         }
         if (obj instanceof String) {
-            return "\'" + obj + "\'";
+            return "'" + obj + "'";
         }
         return obj + "";
     }
@@ -31,17 +31,17 @@ public class Plain {
                 case "added":
                     plain.put("Property '"
                             + entry.getKey(), "' was added with value: "
-                            + checkForObjectValues(entry.getValue().getValue2()) + "\n");
+                            + checkForObjectValues(entry.getValue().getValue2()));
                     break;
                 case "changed":
                     plain.put("Property '"
                             + entry.getKey(), "' was updated. From "
                             + checkForObjectValues(entry.getValue().getValue1()) + " to "
-                            + checkForObjectValues(entry.getValue().getValue2()) + "\n");
+                            + checkForObjectValues(entry.getValue().getValue2()));
                     break;
 
                 case "removed":
-                    plain.put("Property '" + entry.getKey(), "' was removed" + "\n");
+                    plain.put("Property '" + entry.getKey(), "' was removed");
                     break;
                 default:
                     break;

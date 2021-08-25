@@ -26,8 +26,9 @@ public class Formatter {
     public static String mapToString(Map<String, Object> map) {
         StringBuilder stringBuilder = new StringBuilder();
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            stringBuilder.append(entry.getKey()).append(entry.getValue());
+            stringBuilder.append(entry.getKey()).append(entry.getValue()).append("\n");
         }
+        stringBuilder.deleteCharAt(stringBuilder.lastIndexOf("\n"));
         return stringBuilder.toString();
     }
 }
