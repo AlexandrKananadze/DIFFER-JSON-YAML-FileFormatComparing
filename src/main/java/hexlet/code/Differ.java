@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.TreeMap;
 
-public class Differ {
+
+public final class Differ {
 
     public static String fileParsePath(String path) throws IOException {
         Path resPath = Paths.get(path).toAbsolutePath().normalize();
