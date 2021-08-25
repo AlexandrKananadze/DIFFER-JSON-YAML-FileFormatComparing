@@ -14,7 +14,7 @@ public class Plain {
         if (obj instanceof String) {
             return "\'" + obj + "\'";
         }
-        return obj+"";
+        return obj + "";
     }
 
     public static String plainGen(TreeMap<String, Diff> diff) {

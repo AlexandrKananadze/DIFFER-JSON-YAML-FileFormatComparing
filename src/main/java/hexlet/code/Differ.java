@@ -13,52 +13,58 @@ public class Differ {
         return Files.readString(resPath);
     }
 
-    public static HashSet<String>  keySet (Map<String,Object> first, Map<String,Object> second) {
+    public static HashSet<String> keySet(Map<String, Object> first, Map<String, Object> second) {
         HashSet<String> keySet = new HashSet<>(first.keySet());
         keySet.addAll(second.keySet());
-       return keySet;
+        return keySet;
     }
 
-    public static boolean checkNull (Object first,Object second) {
-        if (first == null || second ==null) {
+    public static boolean checkNull(Object first, Object second) {
+        if (first == null || second == null) {
             return first == second;
         }
         return first.equals(second);
     }
-    public static TreeMap<String, Diff> differ (HashSet<String> keySet,Map<String,Object> firstMap, Map<String,Object> secondMap ) {
+
+    public static TreeMap<String, Diff> differ(HashSet<String> keySet, Map<String,
+                                                Object> firstMap, Map<String, Object> secondMap) {
         TreeMap<String, Diff> diff = new TreeMap<>();
-        for ( String key: keySet  ) {
+        for (String key : keySet) {
             if (firstMap.containsKey(key) && !secondMap.containsKey(key)) {
-                Diff differ = new Diff("removed",firstMap.get(key), secondMap.get(key));
-                diff.put(key,differ);
+                Diff differ = new Diff("removed", firstMap.get(key), secondMap.get(key));
+                diff.put(key, differ);
             }
             if (!firstMap.containsKey(key) && secondMap.containsKey(key)) {
-                Diff differ = new Diff( "added",firstMap.get(key),secondMap.get(key));
-                diff.put(key,differ);
+                Diff differ = new Diff("added", firstMap.get(key), secondMap.get(key));
+                diff.put(key, differ);
             }
-            if (firstMap.containsKey(key) && secondMap.containsKey(key) && checkNull(firstMap.get(key),(secondMap.get(key)))){
-                Diff differ = new Diff( "equals",firstMap.get(key),secondMap.get(key));
-                diff.put(key,differ);
+            if (firstMap.containsKey(key) && secondMap.containsKey(key)
+                    && checkNull(firstMap.get(key), (secondMap.get(key)))) {
+                Diff differ = new Diff("equals", firstMap.get(key), secondMap.get(key));
+                diff.put(key, differ);
             }
-            if(firstMap.containsKey(key) && secondMap.containsKey(key) && !checkNull(firstMap.get(key),(secondMap.get(key)))) {
-                Diff differ = new Diff( "changed",firstMap.get(key), secondMap.get(key));
-                diff.put(key,differ);
+            if (firstMap.containsKey(key) && secondMap.containsKey(key)
+                    && !checkNull(firstMap.get(key), (secondMap.get(key)))) {
+                Diff differ = new Diff("changed", firstMap.get(key), secondMap.get(key));
+                diff.put(key, differ);
             }
         }
         return diff;
     }
-// default format stylish
+
+    // default format stylish
     public static String generate(String filepath1, String filepath2) throws Exception {
         return generate(filepath1, filepath2, "stylish");
     }
-//choosable format plain, stylish, json
+
+    //choosable format plain, stylish, json
     public static String generate(String filepath1, String filepath2, String format) throws IOException {
         String firstFileToString = fileParsePath(filepath1);
         String secondFileToString = fileParsePath(filepath2);
         Map<String, Object> firstMap = Parser.parseToMap(firstFileToString, filepath1);
         Map<String, Object> secondMap = Parser.parseToMap(secondFileToString, filepath2);
-        HashSet<String> keyset = keySet(firstMap,secondMap);
-        TreeMap <String, Diff> diff = differ(keyset,firstMap,secondMap);
+        HashSet<String> keyset = keySet(firstMap, secondMap);
+        TreeMap<String, Diff> diff = differ(keyset, firstMap, secondMap);
 
         return Formatter.formatter(format, diff);
     }
