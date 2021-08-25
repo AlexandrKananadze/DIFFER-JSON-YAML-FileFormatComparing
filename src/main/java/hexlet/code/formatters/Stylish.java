@@ -30,7 +30,7 @@ public class Stylish {
                     break;
             }
         }
-        return "\n" + Formatter.mapToString(stylish);
+        return "{\n" + Formatter.mapToString(stylish) + "}";
     }
 }
 
