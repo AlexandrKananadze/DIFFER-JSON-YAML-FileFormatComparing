@@ -47,7 +47,7 @@ public class Plain {
                     break;
             }
         }
-        return  Formatter.mapToString(plain) ;
+        return  Formatter.mapToString(plain);
     }
 
 
