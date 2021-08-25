@@ -46,11 +46,11 @@ public class Formatter {
 
     public static String mapToString(Map<String, Object> map) {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append("{\n");
+       // stringBuilder.append("{\n");
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             stringBuilder.append(entry.getKey()).append(entry.getValue());
         }
-        return stringBuilder.append("}") + "";
+        return stringBuilder.toString(); //.append("}") ;
     }
 
 }

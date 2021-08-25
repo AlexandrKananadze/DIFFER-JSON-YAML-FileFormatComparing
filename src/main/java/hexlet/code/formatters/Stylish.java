@@ -2,6 +2,7 @@ package hexlet.code.formatters;
 
 import hexlet.code.Diff;
 import hexlet.code.Formatter;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,7 +30,7 @@ public class Stylish {
                     break;
             }
         }
-        return Formatter.mapToString(stylish);
+        return "\n" + Formatter.mapToString(stylish);
     }
 }
 

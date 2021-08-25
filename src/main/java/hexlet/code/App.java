@@ -38,4 +38,6 @@ public final class App implements Callable<String> {
     // ./build/install/app/bin/app src/test/resources/Recursive1.yaml src/test/resources/Recursive2.yaml
     // ./build/install/app/bin/app src/test/resources/Recursive1.json src/test/resources/Recursive2.json
 
+    //./build/install/app/bin/app  -f plain  src/test/resources/file1.yaml src/test/resources/file2.yaml
+
 }
