@@ -61,12 +61,4 @@ public class Json {
         }
         return "\n  \"diffs\": [\n" + Formatter.mapToString(json) + "\n  ]";
     }
-
 }
-// "diffs": [
-//         {"field":"proxy","status":"deleted","oldValue":"123.234.53.22"},
-//         {"field":"host","status":"unchanged","oldValue":"hexlet.io","newValue":"hexlet.io"},
-//         {"field":"follow","status":"deleted","oldValue":false},
-//         {"field":"timeout","status":"changed","oldValue":50,"newValue":20},
-//         {"field":"verbose","status":"added","newValue":true}
-//         ]

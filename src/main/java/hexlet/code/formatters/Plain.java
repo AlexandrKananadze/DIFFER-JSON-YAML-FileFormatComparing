@@ -12,7 +12,7 @@ import java.util.TreeMap;
 
 public class Plain {
 
-    public static String checkForObjectValues(Object obj) {
+    public static String objectsToString(Object obj) {
         if (obj instanceof Arrays || obj instanceof List || obj instanceof Map) {
             return "[complex value]";
         }
@@ -31,13 +31,13 @@ public class Plain {
                 case "added":
                     plain.put("Property '"
                             + entry.getKey(), "' was added with value: "
-                            + checkForObjectValues(entry.getValue().getValue2()));
+                            + objectsToString(entry.getValue().getValue2()));
                     break;
                 case "changed":
                     plain.put("Property '"
                             + entry.getKey(), "' was updated. From "
-                            + checkForObjectValues(entry.getValue().getValue1()) + " to "
-                            + checkForObjectValues(entry.getValue().getValue2()));
+                            + objectsToString(entry.getValue().getValue1()) + " to "
+                            + objectsToString(entry.getValue().getValue2()));
                     break;
 
                 case "removed":
@@ -47,9 +47,7 @@ public class Plain {
                     break;
             }
         }
-        return  Formatter.mapToString(plain);
+        return Formatter.mapToString(plain);
     }
-
-
 }
 
