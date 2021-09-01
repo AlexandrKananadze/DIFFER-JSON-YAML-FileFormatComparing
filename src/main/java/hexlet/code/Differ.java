@@ -6,10 +6,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 
 public final class Differ {
+
 
     public static String fileParsePath(String path) throws IOException {
         Path resPath = Paths.get(path).toAbsolutePath().normalize();
@@ -22,17 +24,13 @@ public final class Differ {
         return keySet;
     }
 
-    public static boolean checkNull(Object first, Object second) {
-        if (first == null || second == null) {
-            return first == second;
-        }
-        return first.equals(second);
+    public static boolean checkObjectEquals(Object first, Object second) {
+        return Objects.deepEquals(first, second);
     }
 
-    public static TreeMap<String, Diff> differ(HashSet<String> keySet, Map<String,
-            Object> firstMap, Map<String, Object> secondMap) {
+    public static TreeMap<String, Diff> differ(Map<String, Object> firstMap, Map<String, Object> secondMap) {
         TreeMap<String, Diff> diff = new TreeMap<>();
-        for (String key : keySet) {
+        for (String key : keySet(firstMap, secondMap)) {
             if (firstMap.containsKey(key) && !secondMap.containsKey(key)) {
                 Diff differ = new Diff("removed", firstMap.get(key), secondMap.get(key));
                 diff.put(key, differ);
@@ -42,12 +40,12 @@ public final class Differ {
                 diff.put(key, differ);
             }
             if (firstMap.containsKey(key) && secondMap.containsKey(key)
-                    && checkNull(firstMap.get(key), (secondMap.get(key)))) {
+                    && checkObjectEquals(firstMap.get(key), (secondMap.get(key)))) {
                 Diff differ = new Diff("equals", firstMap.get(key), secondMap.get(key));
                 diff.put(key, differ);
             }
             if (firstMap.containsKey(key) && secondMap.containsKey(key)
-                    && !checkNull(firstMap.get(key), (secondMap.get(key)))) {
+                    && !checkObjectEquals(firstMap.get(key), (secondMap.get(key)))) {
                 Diff differ = new Diff("changed", firstMap.get(key), secondMap.get(key));
                 diff.put(key, differ);
             }
@@ -64,9 +62,7 @@ public final class Differ {
         String secondFileToString = fileParsePath(filepath2);
         Map<String, Object> firstMap = Parser.parseToMap(Parser.objectMapper(filepath1), firstFileToString);
         Map<String, Object> secondMap = Parser.parseToMap(Parser.objectMapper(filepath2), secondFileToString);
-        HashSet<String> keystore = keySet(firstMap, secondMap);
-        TreeMap<String, Diff> diff = differ(keystore, firstMap, secondMap);
-
+        TreeMap<String, Diff> diff = differ(firstMap, secondMap);
         return Formatter.formatter(format, diff);
     }
 }
