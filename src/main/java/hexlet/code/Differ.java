@@ -30,7 +30,7 @@ public final class Differ {
     }
 
     public static TreeMap<String, Diff> differ(HashSet<String> keySet, Map<String,
-                                                Object> firstMap, Map<String, Object> secondMap) {
+            Object> firstMap, Map<String, Object> secondMap) {
         TreeMap<String, Diff> diff = new TreeMap<>();
         for (String key : keySet) {
             if (firstMap.containsKey(key) && !secondMap.containsKey(key)) {
@@ -55,19 +55,17 @@ public final class Differ {
         return diff;
     }
 
-    // default format stylish
     public static String generate(String filepath1, String filepath2) throws Exception {
         return generate(filepath1, filepath2, "stylish");
     }
 
-    //choosable format plain, stylish, json
     public static String generate(String filepath1, String filepath2, String format) throws IOException {
         String firstFileToString = fileParsePath(filepath1);
         String secondFileToString = fileParsePath(filepath2);
-        Map<String, Object> firstMap = Parser.parseToMap(firstFileToString, filepath1);
-        Map<String, Object> secondMap = Parser.parseToMap(secondFileToString, filepath2);
-        HashSet<String> keyset = keySet(firstMap, secondMap);
-        TreeMap<String, Diff> diff = differ(keyset, firstMap, secondMap);
+        Map<String, Object> firstMap = Parser.parseToMap(Parser.objectMapper(filepath1), firstFileToString);
+        Map<String, Object> secondMap = Parser.parseToMap(Parser.objectMapper(filepath2), secondFileToString);
+        HashSet<String> keystore = keySet(firstMap, secondMap);
+        TreeMap<String, Diff> diff = differ(keystore, firstMap, secondMap);
 
         return Formatter.formatter(format, diff);
     }
