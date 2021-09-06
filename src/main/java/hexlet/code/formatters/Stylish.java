@@ -27,7 +27,7 @@ public class Stylish {
                     stylish.put("  - " + entry.getKey() + ": ", entry.getValue().getValue1());
                     break;
                 default:
-                    break;
+                    throw new Error("Unknown Error in Stylish format");
             }
         }
         return "{\n" + Formatter.mapToString(stylish) + "\n}";

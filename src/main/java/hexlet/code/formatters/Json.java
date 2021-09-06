@@ -56,7 +56,7 @@ public class Json {
 
                     break;
                 default:
-                    break;
+                    throw new Error("Unknown Error in Json format");
             }
         }
         return "\n  \"diffs\": [\n" + Formatter.mapToString(json) + "\n  ]";
