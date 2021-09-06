@@ -4,6 +4,7 @@ package hexlet.code;
 import hexlet.code.formatters.Json;
 import hexlet.code.formatters.Plain;
 import hexlet.code.formatters.Stylish;
+
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class Formatter {
     }
 
     public static String mapToString(Map<String, Object> map) {
-       return map.entrySet().stream().map(entry -> (entry.getKey() + entry.getValue())).collect(Collectors.joining("\n"));
+        return map.entrySet().stream().map(entry -> (entry.getKey() + entry.getValue()))
+                .collect(Collectors.joining("\n"));
     }
 }
