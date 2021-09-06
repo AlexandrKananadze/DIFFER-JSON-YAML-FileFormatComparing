@@ -28,7 +28,7 @@ public final class Differ {
         return Objects.deepEquals(first, second);
     }
 
-    public static TreeMap<String, Diff> makeDiffer(Map<String, Object> firstMap, Map<String, Object> secondMap) {
+    public static TreeMap<String, Diff> makeDiff(Map<String, Object> firstMap, Map<String, Object> secondMap) {
         TreeMap<String, Diff> diff = new TreeMap<>();
         for (String key : keySet(firstMap, secondMap)) {
             String status = "";
@@ -61,7 +61,7 @@ public final class Differ {
         String secondFileToString = readFile(filepath2);
         Map<String, Object> firstMap = Parser.parseToMap(Parser.objectMapper(filepath1), firstFileToString);
         Map<String, Object> secondMap = Parser.parseToMap(Parser.objectMapper(filepath2), secondFileToString);
-        TreeMap<String, Diff> diff = makeDiffer(firstMap, secondMap);
+        TreeMap<String, Diff> diff = makeDiff(firstMap, secondMap);
         return Formatter.formatter(format, diff);
     }
 }
