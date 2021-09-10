@@ -37,6 +37,7 @@ $ ./build/install/app/bin/app filepath1.json filepath2.json
   - setting3: true
   + setting3: none
 }
+
 file1.json:
 
 {
@@ -53,6 +54,7 @@ file1.json:
   "chars1": ["a", "b", "c"],
   "chars2": ["d", "e", "f"]
 }
+
 file2.json
 
 {
