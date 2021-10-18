@@ -6,7 +6,8 @@
 
 JSON/YAML Differ
 
-Supported formats: yaml, json. Output supported formats: plain, stylish, json.
+Supported formats: yaml, json. 
+Output supported formats: plain, stylish, json.
 
 file1.json:
 
